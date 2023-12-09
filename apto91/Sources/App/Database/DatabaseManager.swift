@@ -14,25 +14,44 @@ final class DatabaseManager {
     
     static let shared = DatabaseManager()
     
-    let logger = Logger(label: "postgres-logger")
-    let config = PostgresConnection.Configuration(host: "192.168.15.91",
-                                                  port: 5433,
-                                                  username: "postgres",
-                                                  password: "rique16/06/1991",
-                                                  database: "apto91",
-                                                  tls: .disable)
+    private let logger = Logger(label: "postgres-logger")
+    
+    private let host: String
+    private let port: Int
+    private let username: String
+    private let password: String
+    private let bd: String
+    private let config: PostgresConnection.Configuration
     
     // MARK: - Init
-    private init() { }
+    private init() { 
+        
+        host = ProcessInfo.processInfo.environment["DATABASE_HOST"]!
+        port = Int(ProcessInfo.processInfo.environment["DATABASE_PORT"]!)!
+        username = ProcessInfo.processInfo.environment["DATABASE_USERNAME"]!
+        password = ProcessInfo.processInfo.environment["DATABASE_PASSW"]!
+        bd = ProcessInfo.processInfo.environment["DATABASE_BD"]!
+        
+        config = PostgresConnection.Configuration(host: host,
+                                                  port: port,
+                                                  username: username,
+                                                  password: password,
+                                                  database: bd,
+                                                  tls: .disable)
+    }
 
     
     // MARK: - Public methods
-    public func query(query: String) async -> PostgresRowSequence? {
-        let connection = try? await PostgresConnection.connect(configuration: config,
-                                                               id: 1,
-                                                               logger: logger)
-        let rows = try? await connection?.query(PostgresQuery(stringLiteral: query), logger: logger)
-        try? await connection?.close()
+    public func query(query: String) async throws -> PostgresRowSequence? {
+
+        let connection = try await PostgresConnection.connect(configuration: config,
+                                                              id: 1,
+                                                              logger: logger)
+        
+        let rows = try? await connection.query(PostgresQuery(stringLiteral: query), 
+                                               logger: logger)
+        
+        try await connection.close()
         return rows
     }
 }

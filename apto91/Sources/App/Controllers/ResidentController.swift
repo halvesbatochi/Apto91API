@@ -16,8 +16,15 @@ struct ResidentController: RouteCollection {
         resident.delete(use: deleteResident)
     }
     
-    func fetchResident(req: Request) async throws -> String {
-        return "Olá Morador!"
+    func fetchResident(req: Request) async -> String {
+        do {
+            let obj = try await DatabaseManager.shared.query(query: "teste")
+            return "Olá Morador!"
+        } catch {
+            print("\(error.localizedDescription)")
+            return "Falha na conexão. Tente novamente mais tarde!"
+        }
+
     }
     
     func updateResident(req: Request) async throws -> String {
