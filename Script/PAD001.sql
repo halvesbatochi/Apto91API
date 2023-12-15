@@ -134,7 +134,8 @@ ELSIF ENT_VC_ACTION = 'D' THEN
     UPDATE
        AD.AD001
     SET
-       AD001_IT_SITUAC = 0
+       AD001_IT_SITUAC = 0              ,
+       AD001_DT_ULTATU = NOW()
     WHERE
        AD001_NR_MORADOR = ENT_NR_MORADOR;
 
