@@ -16,15 +16,30 @@ struct ResidentController: RouteCollection {
         resident.delete(use: deleteResident)
     }
     
-    func fetchResident(req: Request) async -> String {
+    func fetchResident(req: Request) async throws -> [ResidentResult] {
         do {
-            let obj = try await DatabaseManager.shared.query(query: "teste")
-            return "Olá Morador!"
+            
+            let seqRows = try await DatabaseManager.shared.query(query: "SELECT ad001_vc_nome, ad001_vc_sobren FROM AD.AD001")
+            
+            var retorno: [ResidentResult] = []
+            
+            guard let rows = seqRows else {
+                throw Abort(.internalServerError)
+            }
+            
+            for try await (nome, sobren) in rows.decode((String, String).self) {
+                
+                let obj = ResidentResult(nome: nome, sobren: sobren)
+                retorno.append(obj)
+                
+            }
+            
+            return retorno
+
         } catch {
             print("\(error.localizedDescription)")
-            return "Falha na conexão. Tente novamente mais tarde!"
+            throw Abort(.internalServerError)
         }
-
     }
     
     func updateResident(req: Request) async throws -> String {

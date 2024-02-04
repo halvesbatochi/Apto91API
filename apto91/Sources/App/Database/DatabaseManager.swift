@@ -8,6 +8,7 @@
 import Foundation
 import PostgresNIO
 import Logging
+import Vapor
 
 /// Singleton manages requests to the Postgres database
 final class DatabaseManager {
@@ -24,7 +25,7 @@ final class DatabaseManager {
     private let config: PostgresConnection.Configuration
     
     // MARK: - Init
-    private init() { 
+    private init() {
         
         host = ProcessInfo.processInfo.environment["DATABASE_HOST"]!
         port = Int(ProcessInfo.processInfo.environment["DATABASE_PORT"]!)!
@@ -43,17 +44,20 @@ final class DatabaseManager {
     
     // MARK: - Public methods
     public func query(query: String) async throws -> PostgresRowSequence? {
-
-        let connection = try await PostgresConnection.connect(configuration: config,
-                                                              id: 1,
-                                                              logger: logger)
-        
-        let rows = try? await connection.query(PostgresQuery(stringLiteral: query), 
-                                               logger: logger)
-        
-        try await connection.close()
-        return rows
+        do {
+            
+            let connection = try await PostgresConnection.connect(configuration: config,
+                                                                  id: 1,
+                                                                  logger: logger)
+            
+            let rows = try await connection.query(PostgresQuery(stringLiteral: query),
+                                                                 logger: logger)
+            
+            try await connection.close()
+            return rows
+            
+        } catch {
+            throw Abort(.internalServerError)
+        }
     }
 }
-
-
