@@ -29,7 +29,6 @@ struct ResidentController: RouteCollection {
             
             for try await (nome, sobren, entrada) in rows.decode((String, String, Decimal).self) {
                 
-                print(entrada)
                 let obj = ResidentResult(nome: nome, sobren: sobren, entrada: entrada)
                 retorno.append(obj)
                 
