@@ -10,12 +10,14 @@ import Vapor
 
 struct ResidentResult: Content {
     
-    var nome: String
-    var sobren: String
+    let nome: String
+    let sobren: String
+    let entrada: Decimal
     
-    init(nome: String, sobren: String) {
+    init(nome: String, sobren: String, entrada: Decimal) {
         self.nome = nome
         self.sobren = sobren
+        self.entrada = entrada
     }
     
 }

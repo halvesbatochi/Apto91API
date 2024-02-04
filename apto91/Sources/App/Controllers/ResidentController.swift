@@ -19,7 +19,7 @@ struct ResidentController: RouteCollection {
     func fetchResident(req: Request) async throws -> [ResidentResult] {
         do {
             
-            let seqRows = try await DatabaseManager.shared.query(query: "SELECT ad001_vc_nome, ad001_vc_sobren FROM AD.AD001")
+            let seqRows = try await DatabaseManager.shared.query(query: "SELECT ad001_vc_nome, ad001_vc_sobren, ad001_dt_entrada FROM AD.AD001")
             
             var retorno: [ResidentResult] = []
             
@@ -27,9 +27,10 @@ struct ResidentController: RouteCollection {
                 throw Abort(.internalServerError)
             }
             
-            for try await (nome, sobren) in rows.decode((String, String).self) {
+            for try await (nome, sobren, entrada) in rows.decode((String, String, Decimal).self) {
                 
-                let obj = ResidentResult(nome: nome, sobren: sobren)
+                print(entrada)
+                let obj = ResidentResult(nome: nome, sobren: sobren, entrada: entrada)
                 retorno.append(obj)
                 
             }
