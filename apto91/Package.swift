@@ -12,6 +12,9 @@ let package = Package(
         
         // 🐘 Non-blocking, event-driven Swift client for PostgreSQL
         .package(url: "https://github.com/vapor/postgres-kit.git", from: "2.0.0"),
+        
+        // 🔐 JWT
+        .package(url: "https://github.com/vapor/jwt.git", from: "4.2.2"),
     ],
     targets: [
         .executableTarget(
@@ -19,6 +22,7 @@ let package = Package(
             dependencies: [
                 .product(name: "PostgresKit", package: "postgres-kit"),
                 .product(name: "Vapor", package: "vapor"),
+                .product(name: "JWT", package: "jwt")
             ]
         ),
         .testTarget(name: "AppTests", dependencies: [
