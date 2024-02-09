@@ -2,8 +2,12 @@ import Vapor
 
 func routes(_ app: Application) throws {
     
+    try app.register(collection: LoginController())
     try app.register(collection: ResidentController())
     try app.register(collection: RootController())
+    
+    
+    
     
     app.get("me") { req -> HTTPStatus in
         let payload = try req.jwt.verify(as: JwtPayload.self)
