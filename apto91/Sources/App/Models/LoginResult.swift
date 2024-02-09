@@ -12,6 +12,6 @@ struct LoginResult: Content {
     
     let cd_erro: Decimal
     let ds_erro: String
-    let nr_resident: Int
+    let token: String
     
 }

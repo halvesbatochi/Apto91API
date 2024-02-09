@@ -20,6 +20,10 @@ func routes(_ app: Application) throws {
         // Create a new instance of our JWTPayload
         let payload = JwtPayload(subject: "vaporApto", 
                                  expiration: .init(value: .distantFuture),
+                                 nrResident: 1,
+                                 name: "Henrique",
+                                 lastName: "Alves Batochi",
+                                 startDate: 20240201,
                                  isAdmin: true)
         // Return the signed JWT
         return try [

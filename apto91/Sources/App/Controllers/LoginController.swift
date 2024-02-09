@@ -32,18 +32,36 @@ struct LoginController: RouteCollection {
                 throw Abort(.internalServerError)
             }
             
-            var response: LoginResult = LoginResult(cd_erro: 0,
-                                                   ds_erro: "",
-                                                   nr_resident: 0)
+            var response = PAD002Result(cd_erro: 0,
+                                        ds_erro: "",
+                                        AD001_NR_MORADOR: 0,
+                                        AD001_VC_NOME: "",
+                                        AD001_VC_SOBREN: "",
+                                        AD001_DT_ENTRADA: 0)
             
-            for try await (cd_erro, ds_erro, nr_resident) in row.decode((Decimal, String, Int?).self) {
+            for try await (cd_erro, ds_erro, nr_resident, name, lastName, startDate) 
+            in row.decode((Decimal, String, Int?, String?, String?, Decimal?).self) {
                 
-                response = LoginResult(cd_erro: cd_erro,
-                                      ds_erro: ds_erro,
-                                      nr_resident: nr_resident ?? 0)
+                response = PAD002Result(cd_erro: cd_erro,
+                                        ds_erro: ds_erro,
+                                        AD001_NR_MORADOR: nr_resident ?? 0,
+                                        AD001_VC_NOME: name ?? "",
+                                        AD001_VC_SOBREN: lastName ?? "",
+                                        AD001_DT_ENTRADA: startDate ?? 0)
             }
             
-            return response
+            let payload = JwtPayload(subject: "apto91",
+                                     expiration: .init(value: .distantFuture),
+                                     nrResident: response.AD001_NR_MORADOR,
+                                     name: response.AD001_VC_NOME,
+                                     lastName: response.AD001_VC_SOBREN,
+                                     startDate: response.AD001_DT_ENTRADA,
+                                     isAdmin: true)
+            
+            let responseJWT = LoginResult(cd_erro: response.cd_erro,
+                                          ds_erro: response.ds_erro,
+                                          token: response.cd_erro != 0 ? "" : try req.jwt.sign(payload))
+            return responseJWT
             
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))

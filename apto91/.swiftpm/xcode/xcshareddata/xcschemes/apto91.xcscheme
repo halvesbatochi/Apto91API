@@ -108,6 +108,11 @@
             value = "apto91"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "SECRET_JWT"
+            value = "apto91/CWB/Brasil"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
