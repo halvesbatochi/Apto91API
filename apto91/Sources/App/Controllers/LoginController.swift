@@ -11,22 +11,19 @@ import Vapor
 struct LoginController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let login = routes.grouped("login")
-        login.get(.parameter("user"), .parameter("passw"), use: loginResident)
+        login.post(use: loginResident)
     }
     
 
     func loginResident(req: Request) async throws -> LoginResult {
         
-        guard let user = req.parameters.get("user", as: String.self),
-              let passw = req.parameters.get("passw", as: String.self) else {
-            throw Abort(.badRequest)
-        }
+        try LoginResult.validate(content: req)
+        let resident = try req.content.decode(LoginRequest.self)
         
         do {
             
             let seqRow = try await DatabaseManager.shared.query(query: 
-                         "SELECT * FROM AD.PAD002(1, '\(user)', '\(passw)')"
-            )
+                         "SELECT * FROM AD.PAD002(1, '\(resident.user)', '\(resident.passw)')")
             
             guard let row = seqRow else {
                 throw Abort(.internalServerError)

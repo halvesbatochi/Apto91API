@@ -5,7 +5,6 @@
 //  Created by Henrique Alves Batochi on 26/01/24.
 //
 
-import Foundation
 import Vapor
 
 struct ResidentResult: Content {

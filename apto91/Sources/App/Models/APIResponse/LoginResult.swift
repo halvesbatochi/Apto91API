@@ -5,7 +5,6 @@
 //  Created by Henrique Alves Batochi on 08/02/24.
 //
 
-import Foundation
 import Vapor
 
 struct LoginResult: Content {
