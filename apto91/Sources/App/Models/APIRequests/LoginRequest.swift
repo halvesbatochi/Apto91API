@@ -14,11 +14,11 @@ struct LoginRequest: Content {
     
 }
 
-extension LoginResult: Validatable {
+extension LoginRequest: Validatable {
     static func validations(_ validations: inout Vapor.Validations) {
         validations.add("user", 
                         as: String.self,
                         is: .count(...30),
-                        customFailureDescription: "Usuário excede o limite de caracteres.")
+                        customFailureDescription: "Usuário excedeu o limite permitido.")
     }
 }

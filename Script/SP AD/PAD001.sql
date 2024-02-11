@@ -34,7 +34,7 @@ AS $$
     Local variables
 -------------------------------------------------------------------*/
 DECLARE
-    _R                   AD.PAD002_RESULTSET%Rowtype;
+    _R                   AD.PAD001_RESULTSET%Rowtype;
     _CD_ERRO             NUMERIC(3,0);
     _DS_ERRO             VARCHAR(255);
     _NR_MORADOR          INTEGER     ;
