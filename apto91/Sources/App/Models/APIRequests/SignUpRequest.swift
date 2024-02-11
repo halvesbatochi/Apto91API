@@ -9,6 +9,7 @@ import Vapor
 
 struct SignUpRequest: Content {
     
+    let nrResident: Int?
     let name: String
     let lastName: String
     let cpf: String
