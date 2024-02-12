@@ -13,7 +13,7 @@ enum SignUpError: Error {
 
 /// Manage requests to SignUp route
 struct SignUpController: RouteCollection {
-    func boot(routes: Vapor.RoutesBuilder) throws {
+    func boot(routes: RoutesBuilder) throws {
         let signUp = routes.grouped("signup")
         signUp.post(use: signUpResident)
         signUp.put(use: updateResident)
@@ -47,13 +47,13 @@ struct SignUpController: RouteCollection {
             
             var response = PAD001Result(cd_erro: 0,
                                         ds_erro: "",
-                                        nr_morador: nil)
+                                        nr_resident: nil)
             
-            for try await (cd_erro, ds_erro, nr_morador) in row.decode((Decimal, String, Int?).self) {
+            for try await (cd_erro, ds_erro, nr_resident) in row.decode((Decimal, String, Int?).self) {
                 
                 response = PAD001Result(cd_erro: cd_erro,
                                         ds_erro: ds_erro,
-                                        nr_morador: nr_morador)
+                                        nr_resident: nr_resident)
             }
             
             if response.cd_erro == -1 {
@@ -63,7 +63,8 @@ struct SignUpController: RouteCollection {
             return response
             
         } catch SignUpError.bdError(let errorMessage) {
-            throw Abort(.custom(code: 400, reasonPhrase: errorMessage))
+            throw Abort(.custom(code: 400, 
+                                reasonPhrase: errorMessage))
 
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
@@ -98,13 +99,13 @@ struct SignUpController: RouteCollection {
             
             var response = PAD001Result(cd_erro: 0,
                                         ds_erro: "",
-                                        nr_morador: nil)
+                                        nr_resident: nil)
             
             for try await (cd_erro, ds_erro, nr_morador) in row.decode((Decimal, String, Int?).self) {
                 
                 response = PAD001Result(cd_erro: cd_erro,
                                         ds_erro: ds_erro,
-                                        nr_morador: nr_morador)
+                                        nr_resident: nr_morador)
             }
             
             if response.cd_erro == -1 {
@@ -114,7 +115,8 @@ struct SignUpController: RouteCollection {
             return response
             
         } catch SignUpError.bdError(let errorMessage) {
-            throw Abort(.custom(code: 400, reasonPhrase: errorMessage))
+            throw Abort(.custom(code: 400, 
+                                reasonPhrase: errorMessage))
 
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
@@ -149,13 +151,13 @@ struct SignUpController: RouteCollection {
             
             var response = PAD001Result(cd_erro: 0,
                                         ds_erro: "",
-                                        nr_morador: nil)
+                                        nr_resident: nil)
             
             for try await (cd_erro, ds_erro, nr_morador) in row.decode((Decimal, String, Int?).self) {
                 
                 response = PAD001Result(cd_erro: cd_erro,
                                         ds_erro: ds_erro,
-                                        nr_morador: nr_morador)
+                                        nr_resident: nr_morador)
             }
             
             if response.cd_erro == -1 {
@@ -165,7 +167,8 @@ struct SignUpController: RouteCollection {
             return response
             
         } catch SignUpError.bdError(let errorMessage) {
-            throw Abort(.custom(code: 400, reasonPhrase: errorMessage))
+            throw Abort(.custom(code: 400, 
+                                reasonPhrase: errorMessage))
 
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))

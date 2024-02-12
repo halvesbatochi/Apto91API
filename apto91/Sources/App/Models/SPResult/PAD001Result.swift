@@ -11,6 +11,6 @@ struct PAD001Result: Content {
     
     let cd_erro: Decimal
     let ds_erro: String
-    let nr_morador: Int?
+    let nr_resident: Int?
     
 }
