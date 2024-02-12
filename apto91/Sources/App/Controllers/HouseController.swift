@@ -73,8 +73,8 @@ struct HouseController: RouteCollection {
         
         do {
             
-            var dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
-            var nrHouse = house.nrHouse == nil ? "NULL" : "\(house.nrHouse ?? 0)"
+            let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
+            let nrHouse = house.nrHouse == nil ? "NULL" : "\(house.nrHouse ?? 0)"
             
             let seqRow = try await DatabaseManager.shared.query(query: """
                                                                        SELECT * FROM AD.PAD003(1,
@@ -122,8 +122,8 @@ struct HouseController: RouteCollection {
         
         do {
             
-            var dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
-            var nrHouse = house.nrHouse == nil ? "NULL" : "\(house.nrHouse ?? 0)"
+            let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
+            let nrHouse = house.nrHouse == nil ? "NULL" : "\(house.nrHouse ?? 0)"
             
             let seqRow = try await DatabaseManager.shared.query(query: """
                                                                        SELECT * FROM AD.PAD003(1,
