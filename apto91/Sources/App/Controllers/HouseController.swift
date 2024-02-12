@@ -27,8 +27,7 @@ struct HouseController: RouteCollection {
         
         do {
             
-            var dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
-            
+            let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
             let seqRow = try await DatabaseManager.shared.query(query: """
                                                                        SELECT * FROM AD.PAD003(1,
                                                                                                '\("I")',
@@ -37,7 +36,6 @@ struct HouseController: RouteCollection {
                                                                                                '\(house.houseName)',
                                                                                                \(dueDate))
                                                                        """)
-            
             guard let row = seqRow else {
                 throw Abort(.internalServerError)
             }

@@ -149,7 +149,7 @@ IF ENT_VC_ACTION = 'I' THEN
         NOW()
     ) RETURNING CC001_NR_CONTAM INTO _NR_CONTAM;
 
-    _RESULTADO := (SELECT CC.PCC003(1,
+    _RESULTADO := (SELECT CC.PCC003(ENT_NR_VRS,
                                     ENT_VC_ACTION,
                                     ENT_NR_MORADIA,
                                     _NR_CONTAM,
@@ -171,7 +171,7 @@ ELSIF ENT_VC_ACTION = 'U' THEN
     WHERE
         CC001_NR_CONTAM = ENT_NR_CONTAM;
 
-    _RESULTADO := (SELECT CC.PCC003(1,
+    _RESULTADO := (SELECT CC.PCC003(ENT_NR_VRS,
                                     ENT_VC_ACTION,
                                     ENT_NR_MORADIA,
                                     ENT_NR_CONTAM,
@@ -183,7 +183,7 @@ ELSIF ENT_VC_ACTION = 'U' THEN
 
 ELSIF ENT_VC_ACTION = 'D' THEN
 
-    _RESULTADO := (SELECT CC.PCC003(1,
+    _RESULTADO := (SELECT CC.PCC003(ENT_NR_VRS,
                                     ENT_VC_ACTION,
                                     ENT_NR_MORADIA,
                                     ENT_NR_CONTAM,

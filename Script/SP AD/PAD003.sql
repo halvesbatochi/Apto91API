@@ -34,6 +34,7 @@ DECLARE
     _DS_ERRO             VARCHAR(255);
     _VC_TOKEN            VARCHAR(6)  ;
     _NR_MORADIA          INTEGER     ;
+    _RESULTADO           RECORD      ;
 
 /*-------------------------------------------------------------------
     Function
@@ -94,8 +95,13 @@ IF ENT_VC_ACTION = 'I' THEN
         NOW()
     ) RETURNING AD003_NR_MORADIA INTO _NR_MORADIA;
 
-    _CD_ERRO := 0;
-    _DS_ERRO := 'OK';
+    _RESULTADO := (SELECT AD.PAD004(ENT_NR_VRS,
+                                    ENT_VC_ACTION,
+                                    _NR_MORADIA,
+                                    ENT_NR_MORADOR));
+
+    _CD_ERRO := _RESULTADO.CD_ERRO;
+    _DS_ERRO := _RESULTADO.DS_ERRO;
 
 ELSIF ENT_VC_ACTION = 'U' THEN
 
