@@ -7,10 +7,6 @@
 
 import Vapor
 
-enum LoginError: Error {
-    case bdError(String)
-}
-
 /// Manage requests to Login route
 struct LoginController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
@@ -54,7 +50,7 @@ struct LoginController: RouteCollection {
             }
             
             if response.cd_erro == -1 {
-                throw LoginError.bdError(response.ds_erro)
+                throw DatabaseManagerError.dbError(response.ds_erro)
             }
                 
             let payload = JwtPayload(subject: "apto91",
@@ -71,7 +67,7 @@ struct LoginController: RouteCollection {
             return responseJWT
                 
                 
-        } catch LoginError.bdError(let errorMessage) {
+        } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400, reasonPhrase: errorMessage))
         } catch(let error) {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))

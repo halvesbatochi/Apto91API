@@ -7,10 +7,6 @@
 
 import Vapor
 
-enum TypeBillsError: Error {
-    case dbError(String)
-}
-
 struct TypeBillsController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let typeBills = routes.grouped("typebill")
@@ -51,9 +47,13 @@ struct TypeBillsController: RouteCollection {
                                         nr_typeBill: nr_typeBill)
             }
             
+            if response.cd_erro == -1 {
+                throw DatabaseManagerError.dbError(response.ds_erro)
+            }
+            
             return response
             
-        } catch TypeBillsError.dbError(let errorMessage) {
+        } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
         } catch {
@@ -98,9 +98,13 @@ struct TypeBillsController: RouteCollection {
                                         nr_typeBill: nr_typeBill)
             }
             
+            if response.cd_erro == -1 {
+                throw DatabaseManagerError.dbError(response.ds_erro)
+            }
+            
             return response
             
-        } catch TypeBillsError.dbError(let errorMessage) {
+        } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
         } catch {
@@ -144,9 +148,13 @@ struct TypeBillsController: RouteCollection {
                                         nr_typeBill: nr_typeBill)
             }
             
+            if response.cd_erro == -1 {
+                throw DatabaseManagerError.dbError(response.ds_erro)
+            }
+            
             return response
             
-        } catch TypeBillsError.dbError(let errorMessage) {
+        } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
         } catch {

@@ -10,6 +10,10 @@ import PostgresNIO
 import Logging
 import Vapor
 
+enum DatabaseManagerError: Error {
+    case dbError(String)
+}
+
 /// Singleton manages requests to the Postgres database
 final class DatabaseManager {
     

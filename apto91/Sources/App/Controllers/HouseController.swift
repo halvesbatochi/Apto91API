@@ -7,10 +7,6 @@
 
 import Vapor
 
-enum HouseError: Error {
-    case bdError(String)
-}
-
 /// Manage requests to House route
 struct HouseController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
@@ -52,12 +48,12 @@ struct HouseController: RouteCollection {
             }
             
             if response.cd_erro == -1 {
-                throw HouseError.bdError(response.ds_erro)
+                throw DatabaseManagerError.dbError(response.ds_erro)
             }
             
             return response
             
-        } catch HouseError.bdError(let errorMessage) {
+        } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
         } catch(let error) {
@@ -103,12 +99,12 @@ struct HouseController: RouteCollection {
             }
             
             if response.cd_erro == -1 {
-                throw HouseError.bdError(response.ds_erro)
+                throw DatabaseManagerError.dbError(response.ds_erro)
             }
             
             return response
             
-        } catch HouseError.bdError(let errorMessage) {
+        } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
         } catch {
@@ -154,12 +150,12 @@ struct HouseController: RouteCollection {
             }
             
             if response.cd_erro == -1 {
-                throw HouseError.bdError(response.ds_erro)
+                throw DatabaseManagerError.dbError(response.ds_erro)
             }
             
             return response
             
-        } catch HouseError.bdError(let errorMessage) {
+        } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
         } catch {
