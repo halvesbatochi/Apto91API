@@ -40,7 +40,6 @@ struct SignUpController: RouteCollection {
                                                                                                \(residentSignUp.startDate),
                                                                                                \(residentSignUp.tpResident))
                                                                        """)
-            
             guard let row = seqRow else {
                 throw Abort(.internalServerError)
             }
@@ -68,7 +67,7 @@ struct SignUpController: RouteCollection {
 
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
-            throw Abort(.internalServerError)
+            throw error
         }
     }
     
@@ -77,12 +76,16 @@ struct SignUpController: RouteCollection {
         try SignUpRequest.validate(content: req)
         let residentSignUp = try req.content.decode(SignUpRequest.self)
         
+        guard let nrResident = residentSignUp.nrResident else {
+            throw Abort(.badRequest)
+        }
+        
         do {
             
             let seqRow = try await DatabaseManager.shared.query(query: """
                                                                        SELECT * FROM AD.PAD001(1,
                                                                                                '\("U")',
-                                                                                               \(residentSignUp.nrResident ?? 0),
+                                                                                               \(nrResident),
                                                                                                '\(residentSignUp.name)',
                                                                                                '\(residentSignUp.lastName)',
                                                                                                '\(residentSignUp.cpf)',
@@ -92,7 +95,6 @@ struct SignUpController: RouteCollection {
                                                                                                \(residentSignUp.startDate),
                                                                                                \(residentSignUp.tpResident))
                                                                        """)
-            
             guard let row = seqRow else {
                 throw Abort(.internalServerError)
             }
@@ -120,7 +122,7 @@ struct SignUpController: RouteCollection {
 
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
-            throw Abort(.internalServerError)
+            throw error
         }
     }
     
@@ -131,10 +133,14 @@ struct SignUpController: RouteCollection {
         
         do {
             
+            guard let nrResident = residentSignUp.nrResident else {
+                throw Abort(.badRequest)
+            }
+            
             let seqRow = try await DatabaseManager.shared.query(query: """
                                                                        SELECT * FROM AD.PAD001(1,
                                                                                                '\("D")',
-                                                                                               \(residentSignUp.nrResident ?? 0),
+                                                                                               \(nrResident),
                                                                                                '\(residentSignUp.name)',
                                                                                                '\(residentSignUp.lastName)',
                                                                                                '\(residentSignUp.cpf)',
@@ -144,7 +150,6 @@ struct SignUpController: RouteCollection {
                                                                                                \(residentSignUp.startDate),
                                                                                                \(residentSignUp.tpResident))
                                                                        """)
-            
             guard let row = seqRow else {
                 throw Abort(.internalServerError)
             }
@@ -172,7 +177,7 @@ struct SignUpController: RouteCollection {
 
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
-            throw Abort(.internalServerError)
+            throw error
         }
     }
 }

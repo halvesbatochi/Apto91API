@@ -73,9 +73,9 @@ struct LoginController: RouteCollection {
                 
         } catch LoginError.bdError(let errorMessage) {
             throw Abort(.custom(code: 400, reasonPhrase: errorMessage))
-        } catch {
+        } catch(let error) {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
-            throw Abort(.internalServerError)
+            throw error
         }
     }
 }

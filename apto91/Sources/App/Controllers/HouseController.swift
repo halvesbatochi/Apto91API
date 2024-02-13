@@ -60,9 +60,9 @@ struct HouseController: RouteCollection {
         } catch HouseError.bdError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
-        } catch {
+        } catch(let error) {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
-            throw Abort(.internalServerError)
+            throw error
         }
     }
     
@@ -73,8 +73,11 @@ struct HouseController: RouteCollection {
         
         do {
             
+            guard let nrHouse = house.nrHouse else {
+                throw Abort(.badRequest)
+            }
+            
             let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
-            let nrHouse = house.nrHouse == nil ? "NULL" : "\(house.nrHouse ?? 0)"
             
             let seqRow = try await DatabaseManager.shared.query(query: """
                                                                        SELECT * FROM AD.PAD003(1,
@@ -84,7 +87,6 @@ struct HouseController: RouteCollection {
                                                                                                '\(house.houseName)',
                                                                                                \(dueDate))
                                                                        """)
-            
             guard let row = seqRow else {
                 throw Abort(.internalServerError)
             }
@@ -111,7 +113,7 @@ struct HouseController: RouteCollection {
                                 reasonPhrase: errorMessage))
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
-            throw Abort(.internalServerError)
+            throw error
         }
     }
     
@@ -122,8 +124,11 @@ struct HouseController: RouteCollection {
         
         do {
             
+            guard let nrHouse = house.nrHouse else {
+                throw Abort(.badRequest)
+            }
+            
             let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
-            let nrHouse = house.nrHouse == nil ? "NULL" : "\(house.nrHouse ?? 0)"
             
             let seqRow = try await DatabaseManager.shared.query(query: """
                                                                        SELECT * FROM AD.PAD003(1,
@@ -133,7 +138,6 @@ struct HouseController: RouteCollection {
                                                                                                '\(house.houseName)',
                                                                                                \(dueDate))
                                                                        """)
-            
             guard let row = seqRow else {
                 throw Abort(.internalServerError)
             }
@@ -160,7 +164,7 @@ struct HouseController: RouteCollection {
                                 reasonPhrase: errorMessage))
         } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
-            throw Abort(.internalServerError)
+            throw error
         }
     }
 }
