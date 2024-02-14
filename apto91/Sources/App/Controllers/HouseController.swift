@@ -56,7 +56,7 @@ struct HouseController: RouteCollection {
         } catch DatabaseManagerError.dbError(let errorMessage) {
             throw Abort(.custom(code: 400,
                                 reasonPhrase: errorMessage))
-        } catch(let error) {
+        } catch {
             req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
             throw error
         }
