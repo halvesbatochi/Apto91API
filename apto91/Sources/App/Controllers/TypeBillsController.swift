@@ -24,7 +24,7 @@ struct TypeBillsController: RouteCollection {
         do {
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM CC.PCC002(1,
+                                                                       SELECT * FROM CC.PCC002(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("I")',
                                                                                                NULL,
                                                                                                \(bill.nrResident),
@@ -75,7 +75,7 @@ struct TypeBillsController: RouteCollection {
             }
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM CC.PCC002(1,
+                                                                       SELECT * FROM CC.PCC002(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("U")',
                                                                                                \(nrTypeBill),
                                                                                                \(bill.nrResident),
@@ -126,7 +126,7 @@ struct TypeBillsController: RouteCollection {
             }
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM CC.PCC002(1,
+                                                                       SELECT * FROM CC.PCC002(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("D")',
                                                                                                \(nrTypeBill),
                                                                                                \(bill.nrResident),

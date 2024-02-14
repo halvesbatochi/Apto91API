@@ -22,7 +22,7 @@ struct LoginController: RouteCollection {
         do {
             
             let seqRow = try await DatabaseManager.shared.query(query:"""
-                                                                      SELECT * FROM AD.PAD002(1,
+                                                                      SELECT * FROM AD.PAD002(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                               '\(resident.user)',
                                                                                               '\(resident.passw)')
                                                                       """)

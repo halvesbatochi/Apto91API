@@ -25,7 +25,7 @@ struct HouseController: RouteCollection {
             
             let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM AD.PAD003(1,
+                                                                       SELECT * FROM AD.PAD003(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("I")',
                                                                                                NULL,
                                                                                                \(house.nrResident),
@@ -76,7 +76,7 @@ struct HouseController: RouteCollection {
             let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM AD.PAD003(1,
+                                                                       SELECT * FROM AD.PAD003(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("U")',
                                                                                                \(nrHouse),
                                                                                                \(house.nrResident),
@@ -127,7 +127,7 @@ struct HouseController: RouteCollection {
             let dueDate = house.dueDate == nil ? "NULL" : "\(house.dueDate ?? 0)"
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM AD.PAD003(1,
+                                                                       SELECT * FROM AD.PAD003(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("D")',
                                                                                                \(nrHouse),
                                                                                                \(house.nrResident),

@@ -23,7 +23,7 @@ struct BillController: RouteCollection {
             
             let dtDDDueDate = bill.dtDDDueDate == nil ? "NULL" : "\(bill.dtDDDueDate ?? 0)"
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM CC.PCC001(1,
+                                                                       SELECT * FROM CC.PCC001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                             '\("I")',
                                                                                             NULL,
                                                                                             \(bill.nrResident),
@@ -75,7 +75,7 @@ struct BillController: RouteCollection {
             }
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM CC.PCC001(1,
+                                                                       SELECT * FROM CC.PCC001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                             '\("U")',
                                                                                             \(nrBill),
                                                                                             \(bill.nrResident),
@@ -127,7 +127,7 @@ struct BillController: RouteCollection {
             }
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM CC.PCC001(1,
+                                                                       SELECT * FROM CC.PCC001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                             '\("D")',
                                                                                             \(nrBill),
                                                                                             \(bill.nrResident),

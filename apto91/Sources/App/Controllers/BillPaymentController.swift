@@ -20,7 +20,7 @@ struct BillPaymentController: RouteCollection {
         do {
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM CC.PCC005(1,
+                                                                       SELECT * FROM CC.PCC005(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                \(payment.nrHouse),
                                                                                                \(payment.nrResident),
                                                                                                \(payment.nrMonthlyBill),

@@ -24,7 +24,7 @@ struct SignUpController: RouteCollection {
         do {
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM AD.PAD001(1,
+                                                                       SELECT * FROM AD.PAD001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("I")',
                                                                                                NULL,
                                                                                                '\(residentSignUp.name)',
@@ -79,7 +79,7 @@ struct SignUpController: RouteCollection {
         do {
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM AD.PAD001(1,
+                                                                       SELECT * FROM AD.PAD001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("U")',
                                                                                                \(nrResident),
                                                                                                '\(residentSignUp.name)',
@@ -134,7 +134,7 @@ struct SignUpController: RouteCollection {
             }
             
             let seqRow = try await DatabaseManager.shared.query(query: """
-                                                                       SELECT * FROM AD.PAD001(1,
+                                                                       SELECT * FROM AD.PAD001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
                                                                                                '\("D")',
                                                                                                \(nrResident),
                                                                                                '\(residentSignUp.name)',
