@@ -7,6 +7,7 @@
 
 import Vapor
 
+/// Manage requests to Type Bill route
 struct TypeBillsController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let typeBills = routes.grouped("typebill")
