@@ -9,5 +9,6 @@ func routes(_ app: Application) throws {
     try app.register(collection: TypeBillsController())
     try app.register(collection: BillController())
     try app.register(collection: BillPaymentController())
+    try app.register(collection: BillConfirmationController())
     
 }
