@@ -1,15 +1,15 @@
 //
-//  BillConfirmationController.swift
-//  
+//  BillPaymentConfirmationController.swift
+//
 //
 //  Created by Henrique Alves Batochi on 14/02/24.
 //
 
 import Vapor
 
-struct BillConfirmationController: RouteCollection {
+struct BillPaymentConfirmationController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        let confirmation = routes.grouped("billconfirmation")
+        let confirmation = routes.grouped("billpaymentconfirmation")
         confirmation.post(use: postConfirmation)
     }
     

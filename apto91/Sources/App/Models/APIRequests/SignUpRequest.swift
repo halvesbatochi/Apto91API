@@ -53,6 +53,4 @@ extension SignUpRequest: Validatable {
                         is: .count(...30),
                         customFailureDescription: "Login excedeu o limite permitido.")
     }
-    
-    
 }

@@ -7,7 +7,7 @@
 
 import Vapor
 
-/// Manage requests to SignUp route
+/// Manage requests to Sign Up route
 struct SignUpController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let signUp = routes.grouped("signup")
