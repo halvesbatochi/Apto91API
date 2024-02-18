@@ -64,11 +64,103 @@ struct SharedItemController: RouteCollection {
     
     func putSharedItem(req: Request) async throws -> PIC001Result {
         
-        return PIC001Result(cd_erro: 0, ds_erro: "", nr_item: 0)
+        try SharedItemRequest.validate(content: req)
+        let sharedItem = try req.content.decode(SharedItemRequest.self)
+        
+        do {
+            
+            guard let nrItem = sharedItem.nrItem else {
+                throw Abort(.badRequest)
+            }
+            
+            let seqRow = try await DatabaseManager.shared.query(query: """
+                                                                       SELECT * FROM IC.PIC001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
+                                                                                               '\("U")',
+                                                                                               \(sharedItem.nrHouse),
+                                                                                               \(sharedItem.nrResident),
+                                                                                               \(nrItem),
+                                                                                               '\(sharedItem.vcItem)')
+                                                                       """)
+            
+            guard let row = seqRow else {
+                throw Abort(.internalServerError)
+            }
+            
+            var response = PIC001Result(cd_erro: 0,
+                                        ds_erro: "",
+                                        nr_item: nil)
+            
+            for try await (cd_erro, ds_erro, nr_item) in row.decode((Decimal, String, Int?).self) {
+                
+                response = PIC001Result(cd_erro: cd_erro,
+                                        ds_erro: ds_erro,
+                                        nr_item: nr_item)
+            }
+            
+            if response.cd_erro == -1 {
+                throw DatabaseManagerError.dbError(response.ds_erro)
+            }
+            
+            return response
+            
+            
+        } catch DatabaseManagerError.dbError(let errorMessage) {
+            throw Abort(.custom(code: 400,
+                                reasonPhrase: errorMessage))
+        } catch {
+            req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
+            throw error
+        }
     }
     
     func deleteSharedItem(req: Request) async throws -> PIC001Result {
         
-        return PIC001Result(cd_erro: 0, ds_erro: "", nr_item: 0)
+        try SharedItemRequest.validate(content: req)
+        let sharedItem = try req.content.decode(SharedItemRequest.self)
+        
+        do {
+            
+            guard let nrItem = sharedItem.nrItem else {
+                throw Abort(.badRequest)
+            }
+            
+            let seqRow = try await DatabaseManager.shared.query(query: """
+                                                                       SELECT * FROM IC.PIC001(\(ProcessInfo.processInfo.environment["ENT_NR_VRS"]!),
+                                                                                               '\("D")',
+                                                                                               \(sharedItem.nrHouse),
+                                                                                               \(sharedItem.nrResident),
+                                                                                               \(nrItem),
+                                                                                               '\(sharedItem.vcItem)')
+                                                                       """)
+            
+            guard let row = seqRow else {
+                throw Abort(.internalServerError)
+            }
+            
+            var response = PIC001Result(cd_erro: 0,
+                                        ds_erro: "",
+                                        nr_item: nil)
+            
+            for try await (cd_erro, ds_erro, nr_item) in row.decode((Decimal, String, Int?).self) {
+                
+                response = PIC001Result(cd_erro: cd_erro,
+                                        ds_erro: ds_erro,
+                                        nr_item: nr_item)
+            }
+            
+            if response.cd_erro == -1 {
+                throw DatabaseManagerError.dbError(response.ds_erro)
+            }
+            
+            return response
+            
+            
+        } catch DatabaseManagerError.dbError(let errorMessage) {
+            throw Abort(.custom(code: 400,
+                                reasonPhrase: errorMessage))
+        } catch {
+            req.logger.error(Logger.Message(stringLiteral: error.localizedDescription))
+            throw error
+        }
     }
 }
