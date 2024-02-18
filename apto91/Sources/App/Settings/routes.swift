@@ -12,5 +12,6 @@ func routes(_ app: Application) throws {
     try app.register(collection: BillPaymentConfirmationController())
     try app.register(collection: SharedItemController())
     try app.register(collection: PurchasingSharedItemController())
+    try app.register(collection: PurchasingSharedItemConfirmationController())
     
 }
