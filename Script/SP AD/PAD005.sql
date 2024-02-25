@@ -1,31 +1,31 @@
-SET SEARCH_PATH TO CC;
+SET SEARCH_PATH TO AD;
 
-DROP TYPE IF EXISTS PCC007_RESULTSET CASCADE;
+DROP TYPE IF EXISTS PAD005_RESULTSET CASCADE;
 
-CREATE TYPE PCC007_RESULTSET AS (
-    CD_ERRO              INTEGER    ,
-    DS_ERRO              VARCHAR    ,
-    CC002_NR_TPCONTA     INTEGER    ,
-    CC002_VC_TPCONTA     VARCHAR    ,
-    CC002_IT_RECOR       NUMERIC(2,0)
+CREATE TYPE PAD005_RESULTSET AS (
+    CD_ERRO              INTEGER     ,
+    DS_ERRO              VARCHAR(255),
+    AD001_VC_NOME        VARCHAR     ,
+    AD001_VC_SOBREN      VARCHAR     ,
+    AD001_DT_ENTRADA     NUMERIC(8,0)
 );
 
-CREATE OR REPLACE FUNCTION PCC007 (
-/*-------------------------------------------------------------------
-    Rotina de Listagem dos Tipos de Contas de uma moradia
---------------------------------------------------------------------*/
-    ENT_NR_VRS           NUMERIC(5)   , /* Stored procedure version */
-    ENT_NR_MORADOR       INTEGER      , /* ID Morador               */
-    ENT_NR_MORADIA       INTEGER        /* ID Moradia               */
+CREATE OR REPLACE FUNCTION PAD005 (
+/*------------------------------------------------------------------
+    Rotina de Listagem de Moradores de uma Moradia
+-------------------------------------------------------------------*/
+    ENT_NR_VRS           NUMERIC(5)  , /* Stored procedure version */
+    ENT_NR_MORADIA       INTEGER     , /* ID Moradia               */
+    ENT_NR_MORADOR       INTEGER       /* ID Morador               */
 )
-    RETURNS SETOF PCC007_RESULTSET
+    RETURNS SETOF PAD005_RESULTSET
 AS $$
 
 /*-------------------------------------------------------------------
     Local variables
 -------------------------------------------------------------------*/
 DECLARE
-    _R                   CC.PCC007_RESULTSET%Rowtype;
+    _R                   AD.PAD005_RESULTSET%Rowtype;
     _CD_ERRO             NUMERIC(3,0);
     _DS_ERRO             VARCHAR(255);
 
@@ -59,21 +59,24 @@ END IF;
 /*=================================================================*/
 /*= RESULT SET                                                    =*/
 /*=================================================================*/
-FOR _R IN 
+FOR _R IN
     SELECT
        0               ,
        NULL            ,
-       CC002_NR_TPCONTA,
-       CC002_VC_TPCONTA,
-       CC002_IT_RECOR
+       AD001_VC_NOME   ,
+       AD001_VC_SOBREN ,
+       AD001_DT_ENTRADA
     FROM
-       CC.CC002
+       AD.AD001
+    INNER JOIN AD.AD004 ON ( AD004_NR_MORADOR = AD001_NR_MORADOR)
     WHERE
-        CC002_NR_MORADIA = ENT_NR_MORADIA
-    AND CC002_IT_SITUAC  = 1
+        AD004_NR_MORADIA = ENT_NR_MORADIA
+    AND AD004_IT_SITUAC  = 1
+    ORDER BY
+       AD001_VC_NOME
     LOOP
        RETURN NEXT _R;
-    END LOOP;  
+    END LOOP;
 
 /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 /*::               EXCEPTION HANDLING POSTGRES                   ::*/

@@ -1,31 +1,41 @@
 SET SEARCH_PATH TO CC;
 
-DROP TYPE IF EXISTS PCC007_RESULTSET CASCADE;
+DROP TYPE IF EXISTS PCC008_RESULTSET CASCADE;
 
-CREATE TYPE PCC007_RESULTSET AS (
-    CD_ERRO              INTEGER    ,
-    DS_ERRO              VARCHAR    ,
-    CC002_NR_TPCONTA     INTEGER    ,
-    CC002_VC_TPCONTA     VARCHAR    ,
-    CC002_IT_RECOR       NUMERIC(2,0)
+CREATE TYPE PCC008_RESULTSET AS (
+    CD_ERRO           INTEGER      ,
+    DS_ERRO           VARCHAR(255) ,
+    CC003_NR_ORCAM    INTEGER      ,
+    CC003_NR_CONTAM   INTEGER      ,
+    CC003_VL_VALORM   NUMERIC(10,2),
+    CC003_IT_SITUAC   NUMERIC(2,0) ,
+    CC003_IT_OKADM    NUMERIC(2,0) ,
+    CC001_NR_TPCONTA  INTEGER      ,
+    CC002_VC_TPCONTA  VARCHAR(20)  ,
+    CC001_DT_DDVENC   NUMERIC(2,0) ,
+    CC001_DT_AMVENC   NUMERIC(6,0) ,
+    CC001_VL_VALOR    NUMERIC(10,2),
+    CC001_IT_SITUAC   NUMERIC(2,0)
 );
 
-CREATE OR REPLACE FUNCTION PCC007 (
+CREATE OR REPLACE FUNCTION PCC008 (
 /*-------------------------------------------------------------------
     Rotina de Listagem dos Tipos de Contas de uma moradia
 --------------------------------------------------------------------*/
     ENT_NR_VRS           NUMERIC(5)   , /* Stored procedure version */
     ENT_NR_MORADOR       INTEGER      , /* ID Morador               */
-    ENT_NR_MORADIA       INTEGER        /* ID Moradia               */
+    ENT_NR_MORADIA       INTEGER      , /* ID Moradia               */
+    ENT_DT_INI           NUMERIC(6,0) , /* Data Inicio              */
+    ENT_DT_FIM           NUMERIC(6,0)   /* Data Fim                 */
 )
-    RETURNS SETOF PCC007_RESULTSET
+    RETURNS SETOF PCC008_RESULTSET
 AS $$
 
 /*-------------------------------------------------------------------
     Local variables
 -------------------------------------------------------------------*/
 DECLARE
-    _R                   CC.PCC007_RESULTSET%Rowtype;
+    _R                   CC.PCC008_RESULTSET%Rowtype;
     _CD_ERRO             NUMERIC(3,0);
     _DS_ERRO             VARCHAR(255);
 
@@ -56,24 +66,48 @@ IF NOT EXISTS (SELECT * FROM AD.AD004 WHERE AD004_NR_MORADIA = ENT_NR_MORADIA AN
     RAISE EXCEPTION 'Morador não registrado nesta moradia.';
 END IF;
 
+IF ENT_DT_INI IS NULL THEN
+    ENT_DT_INI := 000000;
+END IF;
+
+IF ENT_DT_FIM IS NULL THEN
+    ENT_DT_FIM := 999999;
+END IF;
+
 /*=================================================================*/
 /*= RESULT SET                                                    =*/
 /*=================================================================*/
-FOR _R IN 
+FOR _R IN
     SELECT
-       0               ,
-       NULL            ,
-       CC002_NR_TPCONTA,
-       CC002_VC_TPCONTA,
-       CC002_IT_RECOR
+       0                 ,
+       NULL              ,
+       CC003_NR_ORCAM    ,
+       CC003_NR_CONTAM   ,
+       CC003_VL_VALORM   ,
+       CC003_IT_SITUAC   ,
+       CC003_IT_OKADM    ,
+       CC001_NR_TPCONTA  ,
+       CC002_VC_TPCONTA  ,
+       CC001_DT_DDVENC   ,
+       CC001_DT_AMVENC   ,
+       CC001_VL_VALOR    ,
+       CC001_IT_SITUAC
     FROM
-       CC.CC002
+       CC.CC003
+    INNER JOIN CC.CC001 ON (CC003_NR_CONTAM = CC001_NR_CONTAM AND
+                            CC003_NR_MORADIA = CC001_NR_MORADIA)
+    INNER JOIN CC.CC002 ON (CC001_NR_TPCONTA = CC002_NR_TPCONTA AND
+                            CC001_NR_MORADIA = CC002_NR_MORADIA)
     WHERE
-        CC002_NR_MORADIA = ENT_NR_MORADIA
-    AND CC002_IT_SITUAC  = 1
+        CC003_NR_MORADIA = ENT_NR_MORADIA
+    AND CC003_NR_MORADOR = ENT_NR_MORADOR
+    AND CC001_DT_AMVENC BETWEEN ENT_DT_INI AND ENT_DT_FIM
+    ORDER BY
+       CC001_NR_TPCONTA,
+       CC001_DT_AMVENC
     LOOP
        RETURN NEXT _R;
-    END LOOP;  
+    END LOOP;
 
 /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 /*::               EXCEPTION HANDLING POSTGRES                   ::*/
